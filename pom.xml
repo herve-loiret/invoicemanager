@@ -29,9 +29,12 @@
             <artifactId>spring-cloud-starter-aws</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-aws-jdbc</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+            <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
