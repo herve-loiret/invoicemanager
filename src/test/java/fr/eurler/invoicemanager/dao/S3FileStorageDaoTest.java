@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
+import static fr.eurler.invoicemanager.configuration.AWSS3EmbeddedConfiguration.EMBEDDED_BUCKET_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -28,7 +29,7 @@ class S3FileStorageDaoTest {
     @Test
     @SneakyThrows
     void should_upload_and_retrieve_and_object() {
-        String bucketName = "some-bucket-name";
+        String bucketName = EMBEDDED_BUCKET_NAME;
         String key = "some_key";
         File file = Paths.get("src/test/resources/s3TestFile.txt").toFile();
 

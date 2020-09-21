@@ -1,6 +1,6 @@
 package fr.eurler.invoicemanager.service;
 
-import fr.eurler.invoicemanager.configuration.AWSConfigurationProperties;
+import fr.eurler.invoicemanager.properties.AWSConfigurationProperties;
 import fr.eurler.invoicemanager.dao.FileStorageDao;
 import fr.eurler.invoicemanager.model.Invoice;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,14 @@ public class InvoiceService {
     private FileStorageDao fileStorageDao;
 
     public void addInvoice(File invoice) {
-        fileStorageDao.uploadFile(awsConfigurationProperties.getS3InvoicesBucket(), "", invoice);
+        fileStorageDao.uploadFile(
+                awsConfigurationProperties.getS3InvoicesBucket(),
+                generateUniqueName(invoice),
+                invoice);
+    }
+
+    private String generateUniqueName(File invoice) {
+        return "todo";
     }
 
     public InputStream getInvoice(String invoiceId) {

@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class AWSS3EmbeddedConfiguration {
 
+    public static final String EMBEDDED_BUCKET_NAME = "fr-eurler-invoices";
+
     @Bean
     public AmazonS3 amazonS3() {
         S3Mock api = S3Mock.create(8001, "/tmp/s3");
@@ -20,7 +22,7 @@ public class AWSS3EmbeddedConfiguration {
 
         AmazonS3Client client = new AmazonS3Client(new AnonymousAWSCredentials());
         client.setEndpoint("http://127.0.0.1:8001");
-        client.createBucket("some-bucket-name");
+        client.createBucket(EMBEDDED_BUCKET_NAME);
         return client;
     }
 }
