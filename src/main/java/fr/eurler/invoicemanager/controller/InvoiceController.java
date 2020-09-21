@@ -3,7 +3,7 @@ package fr.eurler.invoicemanager.controller;
 import fr.eurler.invoicemanager.model.Invoice;
 import fr.eurler.invoicemanager.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -38,12 +39,11 @@ public class InvoiceController {
     }
 
     @GetMapping("/{invoiceId}")
-    public ResponseEntity<ByteArrayResource> getOneInvoice(@PathVariable String invoiceId) {
-        final byte[] data = invoiceService.getInvoice(invoiceId);
-        final ByteArrayResource resource = new ByteArrayResource(data);
+    public ResponseEntity<InputStreamResource> getOneInvoice(@PathVariable String invoiceId) {
+        InputStream data = invoiceService.getInvoice(invoiceId);
+        InputStreamResource resource = new InputStreamResource(data);
         return ResponseEntity
                 .ok()
-                .contentLength(data.length)
                 .header("Content-type", "application/octet-stream")
                 .header("Content-disposition", "attachment; filename=\"" + invoiceId + "\"")
                 .body(resource);

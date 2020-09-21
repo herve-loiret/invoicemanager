@@ -1,26 +1,31 @@
 package fr.eurler.invoicemanager.service;
 
+import fr.eurler.invoicemanager.configuration.AWSConfigurationProperties;
+import fr.eurler.invoicemanager.dao.FileStorageDao;
 import fr.eurler.invoicemanager.model.Invoice;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
 @Service
+@AllArgsConstructor
 public class InvoiceService {
 
-    @Value("${aws.s3.invoices.bucket}")
-    private String bucketName;
+    private AWSConfigurationProperties awsConfigurationProperties;
+
+    private FileStorageDao fileStorageDao;
 
     public void addInvoice(File invoice) {
-        
+        fileStorageDao.uploadFile(awsConfigurationProperties.getS3InvoicesBucket(), "", invoice);
     }
 
-    public byte[] getInvoice(String invoiceId) {
-        return null;
+    public InputStream getInvoice(String invoiceId) {
+        return fileStorageDao.getFile(awsConfigurationProperties.getS3InvoicesBucket(), invoiceId);
     }
 
     public List<Invoice> getAllInvoices() {

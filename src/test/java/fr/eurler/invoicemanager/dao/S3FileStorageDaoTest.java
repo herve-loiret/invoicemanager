@@ -1,4 +1,4 @@
-package fr.eurler.invoicemanager.service;
+package fr.eurler.invoicemanager.dao;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
@@ -11,20 +11,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-
 
 @ActiveProfiles("embeddedS3")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-class S3ClientServiceTest {
+class S3FileStorageDaoTest {
 
     @Autowired
-    private S3ClientService s3ClientService;
+    private S3FileStorageDao s3FileStorageDao;
 
     @Test
     @SneakyThrows
@@ -33,9 +32,9 @@ class S3ClientServiceTest {
         String key = "some_key";
         File file = Paths.get("src/test/resources/s3TestFile.txt").toFile();
 
-        s3ClientService.uploadObject(bucketName, key, file);
-        InputStream inputStream = s3ClientService.getObject(bucketName, key);
-        String text = IOUtils.toString(inputStream, UTF_8.name());
+        s3FileStorageDao.uploadFile(bucketName, key, file);
+        InputStream inputStream = s3FileStorageDao.getFile(bucketName, key);
+        String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
 
         assertThat(text).isEqualTo("some content");
     }

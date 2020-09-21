@@ -13,11 +13,6 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class AWSS3EmbeddedConfiguration {
 
-
-    public AWSS3EmbeddedConfiguration() {
-
-    }
-
     @Bean
     public AmazonS3 amazonS3() {
         S3Mock api = S3Mock.create(8001, "/tmp/s3");
