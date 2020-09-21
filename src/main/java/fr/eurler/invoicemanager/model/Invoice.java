@@ -15,4 +15,6 @@ public class Invoice {
 
     private LocalDate date;
 
+    // ... other functional data
+
 }

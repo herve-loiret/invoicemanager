@@ -4,7 +4,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import org.springframework.beans.factory.annotation.Value;
+import fr.eurler.invoicemanager.properties.MongoDBConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -12,18 +12,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @Configuration
 public class MongoConfiguration {
 
-    private String mongoDBUrl;
-    private String mongoDBDatabase;
-
-    public MongoConfiguration(@Value("${mongodb.url}") String mongoDBUrl,
-                              @Value("${mongodb.database}") String mongoDBDatabase) {
-        this.mongoDBUrl = mongoDBUrl;
-        this.mongoDBDatabase = mongoDBDatabase;
-    }
-
     @Bean
-    public MongoClient mongo() {
-        ConnectionString connectionString = new ConnectionString(mongoDBUrl);
+    public MongoClient mongo(MongoDBConfigurationProperties mongoDBConfigurationProperties) {
+        ConnectionString connectionString = new ConnectionString(mongoDBConfigurationProperties.getUrl());
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
@@ -32,8 +23,8 @@ public class MongoConfiguration {
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(mongo(), mongoDBDatabase);
+    public MongoTemplate mongoTemplate(MongoDBConfigurationProperties mongoDBConfigurationProperties) {
+        return new MongoTemplate(mongo(mongoDBConfigurationProperties), mongoDBConfigurationProperties.getDatabase());
     }
 
 }

@@ -5,7 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import fr.eurler.invoicemanager.properties.AWSConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,21 +14,14 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class AWSS3Configuration {
 
-    @Value("${aws.access_key_id}")
-    private String accessKeyId;
-
-    @Value("${aws.secret_access_key}")
-    private String secretAccessKey;
-
-    @Value("${aws.s3.region}")
-    private String region;
-
     @Bean
-    public AmazonS3 amazonS3() {
-        final BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
+    public AmazonS3 amazonS3(AWSConfigurationProperties awsConfigurationProperties) {
+        final BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(
+                awsConfigurationProperties.getAccessKeyId(),
+                awsConfigurationProperties.getSecretAccessKey());
         return AmazonS3ClientBuilder
                 .standard()
-                .withRegion(Regions.fromName(region))
+                .withRegion(Regions.fromName(awsConfigurationProperties.getS3Region()))
                 .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
                 .build();
     }
