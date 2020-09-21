@@ -1,5 +1,6 @@
 package fr.eurler.invoicemanager.controller;
 
+import fr.eurler.invoicemanager.controller.dto.InvoiceDto;
 import fr.eurler.invoicemanager.model.Invoice;
 import fr.eurler.invoicemanager.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @Slf4j
 @RestController
@@ -32,10 +34,12 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @PostMapping
-    public void uploadInvoice(@RequestPart(value = "file") final MultipartFile multipartFile) {
+    @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
+    public void uploadInvoice(@RequestPart(value = "file") MultipartFile multipartFile,
+                              @RequestPart(value = "invoiceDto") InvoiceDto invoiceDto) {
         File invoiceFile = convertMultiPartFileToFile(multipartFile);
-        invoiceService.addInvoice(invoiceFile);
+        Invoice invoice = toInvoice(invoiceDto);
+        invoiceService.addInvoice(invoice, invoiceFile);
     }
 
     @GetMapping("/{invoiceId}")
@@ -50,9 +54,9 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public List<String> getInvoices() {
+    public List<InvoiceDto> getAllInvoices() {
         return invoiceService.getAllInvoices().stream()
-                .map(Invoice::getId)
+                .map(this::toInvoice)
                 .collect(toList());
     }
 
@@ -66,4 +70,19 @@ public class InvoiceController {
         }
         return file;
     }
+
+    private Invoice toInvoice(InvoiceDto invoiceDto) {
+        return Invoice.builder()
+                .id(invoiceDto.getId())
+                .date(invoiceDto.getDate())
+                .build();
+    }
+
+    private InvoiceDto toInvoice(Invoice invoice) {
+        return InvoiceDto.builder()
+                .id(invoice.getId())
+                .date(invoice.getDate())
+                .build();
+    }
+
 }

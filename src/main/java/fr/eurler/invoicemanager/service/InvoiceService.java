@@ -1,16 +1,15 @@
 package fr.eurler.invoicemanager.service;
 
-import fr.eurler.invoicemanager.properties.AWSConfigurationProperties;
 import fr.eurler.invoicemanager.dao.FileStorageDao;
+import fr.eurler.invoicemanager.dao.InvoiceDao;
 import fr.eurler.invoicemanager.model.Invoice;
+import fr.eurler.invoicemanager.properties.AWSConfigurationProperties;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 @Service
 @AllArgsConstructor
@@ -20,15 +19,13 @@ public class InvoiceService {
 
     private FileStorageDao fileStorageDao;
 
-    public void addInvoice(File invoice) {
+    private InvoiceDao invoiceDao;
+
+    public void addInvoice(Invoice invoice, File invoiceFile) {
         fileStorageDao.uploadFile(
                 awsConfigurationProperties.getS3InvoicesBucket(),
-                generateUniqueName(invoice),
-                invoice);
-    }
-
-    private String generateUniqueName(File invoice) {
-        return "todo";
+                invoice.getId(),
+                invoiceFile);
     }
 
     public InputStream getInvoice(String invoiceId) {
@@ -36,7 +33,7 @@ public class InvoiceService {
     }
 
     public List<Invoice> getAllInvoices() {
-        return asList(Invoice.builder().id("test1").build(), Invoice.builder().id("test2").build());
+        return invoiceDao.getAllInvoices();
     }
 
 

@@ -7,5 +7,5 @@ public interface FileStorageDao {
 
     void uploadFile(String parentFolder, String fileName, File file);
 
-    public InputStream getFile(String parentFolder, String fileName);
+    InputStream getFile(String parentFolder, String fileName);
 }

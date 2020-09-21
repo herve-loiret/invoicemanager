@@ -32,6 +32,10 @@
             <artifactId>spring-cloud-starter-aws</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
@@ -59,6 +63,11 @@
             <groupId>io.findify</groupId>
             <artifactId>s3mock_2.13</artifactId>
             <version>${s3mock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
